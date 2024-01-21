@@ -1,9 +1,8 @@
-/* eslint-disable react-native/no-inline-styles */
 import "react-native-gesture-handler";
 import React from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { Platform, View } from "react-native";
+import { Platform, StyleSheet, View } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
@@ -46,7 +45,7 @@ export default function RootApp() {
   } else {
     return (
       <RootSiblingParent>
-        <View onLayout={onLayoutRootView} style={{ flex: 1 }}>
+        <View onLayout={onLayoutRootView} style={styles.rootView}>
           <StatusBar
             backgroundColor={colors.primary}
             style={Platform.OS === "android" ? "light" : "dark"}
@@ -65,3 +64,9 @@ export default function RootApp() {
 }
 
 registerRootComponent(RootApp);
+
+const styles = StyleSheet.create({
+  rootView: {
+    flex: 1,
+  },
+});

@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View } from "react-native";
+import { Text, View } from "react-native";
 import React from "react";
 
 export const Settings: React.FC = () => {
@@ -11,4 +11,4 @@ export const Settings: React.FC = () => {
 
 export default Settings;
 
-const styles = StyleSheet.create({});
+// const styles = StyleSheet.create({});
