@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "freelance-pomodoro-timer-mobile-app",
+    "name": "Pomo App",
     "slug": "freelance-pomodoro-timer-mobile-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -25,6 +25,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "plugins": [
+      "expo-font"
+    ]
   }
 }
