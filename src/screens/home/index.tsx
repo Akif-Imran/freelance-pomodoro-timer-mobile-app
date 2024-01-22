@@ -8,7 +8,7 @@ import { Easing, withTiming } from "react-native-reanimated";
 import { FontAwesome5 } from "@expo/vector-icons";
 
 export const Home: React.FC = () => {
-  const [isPlaying, _setIsPlaying] = React.useState(true);
+  const [isPlaying, _setIsPlaying] = React.useState(false);
 
   return (
     <SafeAreaView style={styles.main} mode="margin">
