@@ -1,4 +1,21 @@
 export const theme = {
+  radius: {
+    none: 0,
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
+    full: 9999,
+  },
+  spacing: {
+    none: 0,
+    xs: 4,
+    sm: 8,
+    md: 12,
+    lg: 16,
+    xl: 24,
+  },
   font: {
     size: {
       sm: 15,
@@ -12,4 +29,4 @@ export const theme = {
       semi_bold: "Poppins-Semibold", //600
     },
   },
-};
+} as const;
