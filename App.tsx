@@ -10,6 +10,7 @@ import { registerRootComponent } from "expo";
 import { colors } from "@theme";
 import { store } from "@store";
 import { Provider as ReduxProvider } from "react-redux";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 import { App } from "@";
 
 SplashScreen.preventAutoHideAsync();
@@ -45,19 +46,21 @@ export default function RootApp() {
   } else {
     return (
       <RootSiblingParent>
-        <View onLayout={onLayoutRootView} style={styles.rootView}>
-          <StatusBar
-            backgroundColor={colors.primary}
-            style={Platform.OS === "android" ? "light" : "dark"}
-          />
-          {/* <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}> */}
-          {/* <PersistGate persistor={persistor} loading={null}>            </PersistGate> */}
-          <ReduxProvider store={store}>
-            <NavigationContainer theme={DefaultTheme}>
-              <App />
-            </NavigationContainer>
-          </ReduxProvider>
-        </View>
+        <SafeAreaProvider>
+          <View onLayout={onLayoutRootView} style={styles.rootView}>
+            <StatusBar
+              backgroundColor={colors.primary}
+              style={Platform.OS === "android" ? "light" : "dark"}
+            />
+            {/* <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}> */}
+            {/* <PersistGate persistor={persistor} loading={null}>            </PersistGate> */}
+            <ReduxProvider store={store}>
+              <NavigationContainer theme={DefaultTheme}>
+                <App />
+              </NavigationContainer>
+            </ReduxProvider>
+          </View>
+        </SafeAreaProvider>
       </RootSiblingParent>
     );
   }

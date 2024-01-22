@@ -1,14 +1,13 @@
-import { StyleSheet, Text } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
-import { SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "@theme";
 import { Home } from "@screens";
+import { colors } from "@theme";
 
 export const App = () => {
   return (
-    <SafeAreaView style={styles.mainContainer}>
+    <View style={styles.mainContainer}>
       <Home />
-    </SafeAreaView>
+    </View>
   );
 };
 
@@ -17,5 +16,6 @@ export default App;
 const styles = StyleSheet.create({
   mainContainer: {
     flex: 1,
+    backgroundColor: colors.white,
   },
 });
