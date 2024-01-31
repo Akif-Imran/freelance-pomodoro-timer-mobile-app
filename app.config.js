@@ -13,8 +13,9 @@ export default {
     },
     assetBundlePatterns: ["**/*"],
     ios: {
-      googleServicesFile: process.env.GOOGLE_SERVICES_IOS,
+      googleServicesFile: "./GoogleService-Info.plist",
       bundleIdentifier: "com.hershjoshi.pomo",
+      useFrameworks: "static",
       buildNumber: "1",
       supportsTablet: true,
     },
@@ -30,7 +31,20 @@ export default {
     web: {
       favicon: "./assets/favicon.png",
     },
-    plugins: ["expo-font", "@react-native-google-signin/google-signin"],
+    plugins: [
+      [
+        "expo-build-properties",
+        {
+          ios: {
+            useFrameworks: "static",
+          },
+        },
+      ],
+      "expo-font",
+      "@react-native-google-signin/google-signin",
+      "@react-native-firebase/app",
+      "@react-native-firebase/auth",
+    ],
     extra: {
       eas: {
         projectId: "f65567b1-f9f1-4485-94d5-4cce7eedb1cd",

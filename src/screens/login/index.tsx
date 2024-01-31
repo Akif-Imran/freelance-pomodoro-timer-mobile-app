@@ -19,6 +19,7 @@ export const Login: React.FC<AuthStackScreenProps<"Login">> = ({}) => {
   });
 
   const handleLoginWithGoogle = () => {
+    console.log("pressed");
     setLoading((prev) => ({ ...prev, google: true }));
     FirebaseService.signInWithGoogle()
       .then((res) => {
@@ -43,6 +44,7 @@ export const Login: React.FC<AuthStackScreenProps<"Login">> = ({}) => {
       </View>
 
       <View style={styles.inputContainer}>
+        <Text style={styles.bottomTitle}>Get Started</Text>
         <_SigninButton
           onPress={handleLoginWithGoogle}
           imageSource={images.google}
@@ -67,7 +69,10 @@ const styles = StyleSheet.create({
     ...baseStyles.title,
     color: colors.white,
   },
-
+  bottomTitle: {
+    ...baseStyles.title,
+    color: colors.black,
+  },
   screenSubHeading: {
     ...baseStyles.subTitle,
     color: colors.white,
@@ -76,18 +81,21 @@ const styles = StyleSheet.create({
   },
 
   header: {
-    flex: 2,
+    flex: 2.5,
     flexDirection: "column",
     justifyContent: "center",
     alignItems: "center",
   },
   inputContainer: {
-    flex: 8,
+    flex: 2.5,
+    flexDirection: "column",
     alignItems: "center",
+    rowGap: theme.spacing.xl,
     backgroundColor: colors.white,
     borderTopLeftRadius: theme.radius.xl,
     borderTopRightRadius: theme.radius.xl,
     marginTop: theme.spacing.sm,
-    paddingBottom: theme.spacing.xl,
+    paddingHorizontal: theme.spacing.xl,
+    paddingVertical: theme.spacing.xl,
   },
 });

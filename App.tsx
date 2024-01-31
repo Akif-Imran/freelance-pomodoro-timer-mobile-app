@@ -12,6 +12,12 @@ import { store } from "@store";
 import { Provider as ReduxProvider } from "react-redux";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { App } from "@";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
+
+GoogleSignin.configure({
+  iosClientId: "179225801982-o9on51j03o6upnrfu785sf0t6l1gk0fv.apps.googleusercontent.com",
+  webClientId: "179225801982-o9on51j03o6upnrfu785sf0t6l1gk0fv.apps.googleusercontent.com",
+});
 
 SplashScreen.preventAutoHideAsync();
 
