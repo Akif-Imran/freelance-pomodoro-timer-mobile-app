@@ -1,12 +1,12 @@
 import { StyleSheet, View } from "react-native";
 import React from "react";
-import { Home } from "@screens";
 import { colors } from "@theme";
+import { AuthStack } from "@navigation";
 
 export const App = () => {
   return (
     <View style={styles.mainContainer}>
-      <Home />
+      <AuthStack />
     </View>
   );
 };

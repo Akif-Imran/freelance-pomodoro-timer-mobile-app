@@ -6,3 +6,8 @@ export const icons: Record<IconKeys, ImageRequireSource> = {
   refresh: require("./icons/refresh.png"),
   play: require("./icons/play.png"),
 };
+
+type ImageKeys = "google";
+export const images: Record<ImageKeys, ImageRequireSource> = {
+  google: require("./images/google.png"),
+};

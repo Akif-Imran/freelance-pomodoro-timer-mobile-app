@@ -21,7 +21,8 @@ interface OwnProps {
   progress: number;
 }
 export const _CircularProgressBar: React.FC<OwnProps> = () => {
-  const [timer, setTimer] = React.useState(2);
+  const timer_value = 5;
+  const [timer, setTimer] = React.useState(timer_value);
   const progress = useSharedValue(0);
   const ref = useRef<NodeJS.Timeout>(null);
   // const a = interpolate(progress, [0, 1], [0, Math.PI * 2]);
@@ -38,7 +39,7 @@ export const _CircularProgressBar: React.FC<OwnProps> = () => {
 
   React.useEffect(() => {
     progress.value = withTiming(1, {
-      duration: 2 * 1000,
+      duration: timer_value * 1000,
       easing: Easing.linear,
     });
     const ref = setInterval(() => {

@@ -21,6 +21,7 @@ module.exports = function (api) {
             "@navigation": "./src/navigation/index.ts",
             "@navigation-types": "./src/navigation/types.ts",
             "@screens": "./src/screens/index.ts",
+            "@styles": "./src/styles.ts",
             "@store": "./src/store/index.ts",
             "@slices": "./src/store/slices/index.ts",
             "@thunks": "./src/store/thunks/index.ts",
