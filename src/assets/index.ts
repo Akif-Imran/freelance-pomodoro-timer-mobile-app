@@ -7,7 +7,8 @@ export const icons: Record<IconKeys, ImageRequireSource> = {
   play: require("./icons/play.png"),
 };
 
-type ImageKeys = "google";
+type ImageKeys = "google" | "profile";
 export const images: Record<ImageKeys, ImageRequireSource> = {
   google: require("./images/google.png"),
+  profile: require("./images/profile.png"),
 };

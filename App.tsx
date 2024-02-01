@@ -2,17 +2,21 @@ import "react-native-gesture-handler";
 import React from "react";
 import { DefaultTheme, NavigationContainer } from "@react-navigation/native";
 import { StatusBar } from "expo-status-bar";
-import { Platform, StyleSheet, View } from "react-native";
+import { Platform, StyleSheet, Text, View } from "react-native";
 import { RootSiblingParent } from "react-native-root-siblings";
 import * as Font from "expo-font";
 import * as SplashScreen from "expo-splash-screen";
 import { registerRootComponent } from "expo";
 import { colors } from "@theme";
-import { store } from "@store";
+import { store, persistor } from "@store";
 import { Provider as ReduxProvider } from "react-redux";
+import { PersistGate } from "redux-persist/integration/react";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { App } from "@";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
+import * as SystemUI from "expo-system-ui";
+
+SystemUI.setBackgroundColorAsync(colors.white);
 
 GoogleSignin.configure({
   iosClientId: "179225801982-o9on51j03o6upnrfu785sf0t6l1gk0fv.apps.googleusercontent.com",
@@ -47,6 +51,8 @@ export default function RootApp() {
     }
   }, [isAppReady]);
 
+  const loader = <Text>Loading...</Text>;
+
   if (!isAppReady) {
     return null;
   } else {
@@ -61,9 +67,11 @@ export default function RootApp() {
             {/* <NavigationContainer theme={scheme === 'dark' ? DarkTheme : DefaultTheme}> */}
             {/* <PersistGate persistor={persistor} loading={null}>            </PersistGate> */}
             <ReduxProvider store={store}>
-              <NavigationContainer theme={DefaultTheme}>
-                <App />
-              </NavigationContainer>
+              <PersistGate persistor={persistor} loading={loader}>
+                <NavigationContainer theme={DefaultTheme}>
+                  <App />
+                </NavigationContainer>
+              </PersistGate>
             </ReduxProvider>
           </View>
         </SafeAreaProvider>
@@ -77,5 +85,6 @@ registerRootComponent(RootApp);
 const styles = StyleSheet.create({
   rootView: {
     flex: 1,
+    backgroundColor: colors.white,
   },
 });

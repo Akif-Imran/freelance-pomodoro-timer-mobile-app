@@ -18,6 +18,7 @@ export const theme = {
   },
   font: {
     size: {
+      xs: 12,
       sm: 15,
       md: 18,
       lg: 24,

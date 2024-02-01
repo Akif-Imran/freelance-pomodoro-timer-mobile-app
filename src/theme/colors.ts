@@ -7,4 +7,5 @@ export const colors = {
   grayScale70: "#78828A",
   grayText: "rgba(0, 0, 0, 0.3)",
   error: "#F44336",
+  titleText: "#616161",
 };

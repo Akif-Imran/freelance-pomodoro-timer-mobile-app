@@ -1,11 +1,11 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
 import { colors, theme } from "@theme";
 import { AuthStackScreenProps } from "@navigation-types";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { FirebaseService, ToastService } from "@utility";
 import { useAppDispatch } from "@store";
-import { authorize } from "@slices";
+import { authorize, authorizeGuest } from "@slices";
 import { baseStyles, textStyles } from "@styles";
 import { _SigninButton } from "@components";
 import { images } from "@assets";
@@ -36,6 +36,10 @@ export const Login: React.FC<AuthStackScreenProps<"Login">> = ({}) => {
       });
   };
 
+  const handleGuestLogin = () => {
+    dispatch(authorizeGuest());
+  };
+
   return (
     <View style={StyleSheet.compose(styles.main, { paddingTop: top })}>
       <View style={styles.header}>
@@ -53,6 +57,14 @@ export const Login: React.FC<AuthStackScreenProps<"Login">> = ({}) => {
         />
 
         {errorMessage ? <Text style={textStyles.errorText}>{errorMessage}</Text> : null}
+
+        <Text style={textStyles.subText}>- or -</Text>
+
+        <Pressable style={styles.btn} onPress={handleGuestLogin}>
+          <Text allowFontScaling style={styles.btnText}>
+            Continue as Guest
+          </Text>
+        </Pressable>
       </View>
     </View>
   );
@@ -97,5 +109,17 @@ const styles = StyleSheet.create({
     marginTop: theme.spacing.sm,
     paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.xl,
+  },
+  btn: {
+    paddingVertical: theme.spacing.lg,
+    paddingHorizontal: theme.spacing.lg,
+    backgroundColor: colors.primary,
+    borderRadius: theme.radius.full,
+    width: "100%",
+  },
+  btnText: {
+    ...textStyles.onPrimary,
+    textAlign: "center",
+    // borderWidth: 1,
   },
 });

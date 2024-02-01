@@ -27,6 +27,16 @@ const authSlice = createSlice({
   name: "auth",
   initialState: initialState,
   reducers: {
+    authorizeGuest: (state) => {
+      state.isAuthorized = true;
+      state.user = {
+        displayName: "Guest",
+        email: "guest@example.com",
+        photoURL: "",
+        providerId: "",
+        uid: "",
+      };
+    },
     authorize: (state, action: PayloadAction<IUser>) => {
       state.isAuthorized = true;
       state.user = action.payload;
@@ -39,5 +49,5 @@ const authSlice = createSlice({
 });
 
 export { authSlice };
-export const { authorize, revoke } = authSlice.actions;
+export const { authorize, revoke, authorizeGuest } = authSlice.actions;
 export const authReducer = authSlice.reducer;

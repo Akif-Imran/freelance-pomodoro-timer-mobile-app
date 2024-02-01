@@ -1,14 +1,16 @@
 import { Dimensions, StyleSheet, Text } from "react-native";
 import Animated, {
   Easing,
+  cancelAnimation,
   useAnimatedProps,
-  useDerivedValue,
   useSharedValue,
   withTiming,
 } from "react-native-reanimated";
-import React, { useRef } from "react";
+import React from "react";
 import Svg, { Circle } from "react-native-svg";
 import { colors, theme } from "@theme";
+import { selectTimer, selectValues, useAppDispatch, useAppSelector } from "@store";
+import { finish, setTimerRef } from "@slices";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const { width } = Dimensions.get("window");
@@ -17,41 +19,59 @@ const strokeWidth = 14;
 const radius = (size - strokeWidth) / 2;
 const circumference = (radius - 15) * 2 * Math.PI;
 
-interface OwnProps {
-  progress: number;
-}
+interface OwnProps {}
 export const _CircularProgressBar: React.FC<OwnProps> = () => {
-  const timer_value = 5;
-  const [timer, setTimer] = React.useState(timer_value);
+  const dispatch = useAppDispatch();
+  const { work, longBreak, shortBreak } = useAppSelector(selectValues);
+  const { isPlaying, isBreak, isPaused, timerRef, worked } = useAppSelector(selectTimer);
+  const [timer, setTimer] = React.useState(0);
   const progress = useSharedValue(0);
-  const ref = useRef<NodeJS.Timeout>(null);
+  // const ref = useRef<NodeJS.Timeout>(null);
   // const a = interpolate(progress, [0, 1], [0, Math.PI * 2]);
   const animatedProps = useAnimatedProps(() => ({
     strokeDashoffset: circumference * progress.value,
   }));
 
-  const animatedText = useDerivedValue(() => `${Math.floor(progress.value * 5)}`);
-  const animatedTextProps = useAnimatedProps(() => {
-    return {
-      text: animatedText.value,
-    };
-  });
+  // const animatedText = useDerivedValue(() => `${Math.floor(progress.value * 5)}`);
+  // const animatedTextProps = useAnimatedProps(() => {
+  //   return {
+  //     text: animatedText.value,
+  //   };
+  // });
+
+  const onFinish = React.useCallback(() => {
+    dispatch(finish());
+  }, [dispatch]);
 
   React.useEffect(() => {
+    const breakTime = worked % 4 === 0 ? longBreak : shortBreak;
+    const value = isBreak ? breakTime : work;
+    if (!isPlaying) {
+      if (isPaused) {
+        cancelAnimation(progress);
+        clearInterval(timerRef);
+      } else {
+        progress.value = withTiming(0, { duration: 0 });
+        setTimer(value * 60);
+      }
+      return;
+    }
     progress.value = withTiming(1, {
-      duration: timer_value * 1000,
+      duration: value * 60 * 1000,
       easing: Easing.linear,
     });
     const ref = setInterval(() => {
       setTimer((prev) => {
         console.log(prev);
         if (prev <= 0) {
-          clearInterval(ref);
+          onFinish();
+          progress.value = withTiming(1, { duration: 0 });
           return 0;
         } else return prev - 1;
       });
     }, 1000);
-  }, []);
+    dispatch(setTimerRef(ref));
+  }, [isPlaying, isBreak]);
 
   return (
     <React.Fragment>
@@ -72,9 +92,7 @@ export const _CircularProgressBar: React.FC<OwnProps> = () => {
       </Svg>
       <Text style={styles.timerText}>{`${Math.floor(timer / 60)
         .toString()
-        .padStart(2, "0")}:${Math.floor(timer - Math.floor(timer / 60) * 60)
-        .toString()
-        .padStart(2, "0")}`}</Text>
+        .padStart(2, "0")}:${(timer % 60).toString().padStart(2, "0")}`}</Text>
     </React.Fragment>
   );
 };
