@@ -8,4 +8,6 @@ export const colors = {
   grayText: "rgba(0, 0, 0, 0.3)",
   error: "#F44336",
   titleText: "#616161",
+  divider: "rgba(255, 255, 255, 0.4)",
+  alphaWhite: "rgba(255, 255, 255, 0.7)",
 };

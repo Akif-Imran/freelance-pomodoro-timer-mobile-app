@@ -59,12 +59,12 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
         </View>
       </View>
 
-      <View style={styles.fabContainer}>
-        <TouchableOpacity style={styles.fab} onPress={start}>
+      <View style={gStyles.fabContainer}>
+        <TouchableOpacity style={gStyles.fab} onPress={start}>
           {isPlaying ? (
             <FontAwesome5 name="pause" size={28} color={colors.white} />
           ) : (
-            <Image source={icons.play} style={gStyles.img} />
+            <Image source={icons.play} style={gStyles.img} resizeMode="contain" />
           )}
         </TouchableOpacity>
       </View>
@@ -126,21 +126,6 @@ const styles = StyleSheet.create({
     borderRadius: theme.radius.xl,
     width: theme.font.size.lg * 2,
     height: 8,
-    backgroundColor: colors.primary,
-  },
-  fabContainer: {
-    flex: 2,
-    flexDirection: "row",
-    justifyContent: "flex-end",
-    // borderWidth: 1,
-  },
-  fab: {
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    width: 96,
-    height: 96,
-    borderRadius: theme.radius.full,
     backgroundColor: colors.primary,
   },
 });

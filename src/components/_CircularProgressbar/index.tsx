@@ -71,7 +71,8 @@ export const _CircularProgressBar: React.FC<OwnProps> = () => {
       });
     }, 1000);
     dispatch(setTimerRef(ref));
-  }, [isPlaying, isBreak]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying, isBreak, work, longBreak, shortBreak, worked]);
 
   return (
     <React.Fragment>

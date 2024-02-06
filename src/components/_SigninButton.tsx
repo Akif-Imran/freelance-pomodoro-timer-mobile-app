@@ -3,7 +3,6 @@ import {
   ImageRequireSource,
   Platform,
   StyleSheet,
-  Text,
   TouchableOpacity,
   TouchableOpacityProps,
 } from "react-native";
@@ -17,7 +16,7 @@ interface OwnProps extends TouchableOpacityProps {
   label?: string;
   loading?: boolean;
 }
-export const _SigninButton: React.FC<OwnProps> = ({ onPress, imageSource }) => {
+export const _SigninButton: React.FC<OwnProps> = ({ onPress }) => {
   return (
     <TouchableOpacity style={styles.main} {...{ onPress }}>
       <Image source={images.google} style={styles.img} />
