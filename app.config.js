@@ -13,7 +13,7 @@ export default {
     },
     assetBundlePatterns: ["**/*"],
     ios: {
-      googleServicesFile: "./GoogleService-Info.plist",
+      googleServicesFile: process.env.GOOGLE_SERVICES_IOS,
       bundleIdentifier: "com.hershjoshi.pomo",
       useFrameworks: "static",
       buildNumber: "1",

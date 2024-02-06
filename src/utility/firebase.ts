@@ -164,7 +164,7 @@ export class FirebaseService {
         };
       }
     } catch (error: any) {
-      console.log("FirebaseService.signInWithGoogle =>", error);
+      console.log("FirebaseService.signInWithGoogle =>", JSON.stringify(error));
       let message = "";
       switch (error.code) {
         case statusCodes.SIGN_IN_CANCELLED:
