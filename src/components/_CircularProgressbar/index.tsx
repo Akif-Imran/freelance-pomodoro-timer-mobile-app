@@ -11,6 +11,7 @@ import Svg, { Circle } from "react-native-svg";
 import { colors, theme } from "@theme";
 import { selectTimer, selectValues, useAppDispatch, useAppSelector } from "@store";
 import { finish, setTimerRef } from "@slices";
+import * as Notifications from "expo-notifications";
 
 const AnimatedCircle = Animated.createAnimatedComponent(Circle);
 const { width } = Dimensions.get("window");
@@ -19,8 +20,10 @@ const strokeWidth = 14;
 const radius = (size - strokeWidth) / 2;
 const circumference = (radius - 15) * 2 * Math.PI;
 
-interface OwnProps {}
-export const _CircularProgressBar: React.FC<OwnProps> = () => {
+interface OwnProps {
+  resetSound(): Promise<void>;
+}
+export const _CircularProgressBar: React.FC<OwnProps> = ({ resetSound }) => {
   const dispatch = useAppDispatch();
   const { work, longBreak, shortBreak } = useAppSelector(selectValues);
   const { isPlaying, isBreak, isPaused, timerRef, worked } = useAppSelector(selectTimer);
@@ -39,9 +42,18 @@ export const _CircularProgressBar: React.FC<OwnProps> = () => {
   //   };
   // });
 
-  const onFinish = React.useCallback(() => {
+  const onFinish = React.useCallback(async () => {
     dispatch(finish());
-  }, [dispatch]);
+    await resetSound();
+    await Notifications.scheduleNotificationAsync({
+      content: {
+        title: isBreak ? "Rest is over." : "Time to rest.",
+        body: isBreak ? "Time to get back to work." : "Take a rest to freshen up.",
+        data: { data: "goes here" },
+      },
+      trigger: null,
+    });
+  }, [dispatch, resetSound, isBreak]);
 
   React.useEffect(() => {
     const breakTime = worked % 4 === 0 ? longBreak : shortBreak;

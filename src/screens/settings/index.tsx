@@ -18,6 +18,7 @@ interface IForm {
   longBreak: number;
   lofi: string;
   hz: string;
+  hzLabel: string;
   rain: string;
   hasCustomAudio: boolean;
   customAudio?: {
@@ -40,11 +41,12 @@ const schema = yup.object().shape({
   hz: yup
     .string()
     .oneOf([...Object.keys(sounds.hz)])
-    .required("Lofi sound selection is required"),
+    .required("Hz sound selection is required"),
+  hzLabel: yup.string().required("Hz sound selection is required"),
   rain: yup
     .string()
     .oneOf([...Object.keys(sounds.rain)])
-    .required("Lofi sound selection is required"),
+    .required("Rain sound selection is required"),
   hasCustomAudio: yup.boolean().required(),
   customAudio: yup
     .object()
@@ -70,7 +72,8 @@ const schema = yup.object().shape({
 export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigation }) => {
   const dispatch = useAppDispatch();
   const { user } = useAppSelector(selectAuth);
-  const { work, shortBreak, longBreak, lofi, hz, rain, customAudio } = useAppSelector(selectValues);
+  const { work, shortBreak, longBreak, lofi, hz, rain, customAudio, hzLabel } =
+    useAppSelector(selectValues);
 
   const form = useFormik<IForm>({
     initialValues: {
@@ -78,6 +81,7 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
       shortBreak: shortBreak,
       longBreak: longBreak,
       hz: hz,
+      hzLabel: hzLabel,
       lofi: lofi,
       rain: rain,
       hasCustomAudio: customAudio?.url ? true : false,
@@ -205,7 +209,12 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
                   Lofi 1
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => form.setFieldValue("hz", "hz-40")}>
+              <TouchableOpacity
+                onPress={() => {
+                  form.setFieldValue("hz", "hz-40");
+                  form.setFieldValue("hzLabel", "40hz");
+                }}
+              >
                 <Text
                   style={[
                     baseStyles.alphaWhiteText,
@@ -244,7 +253,12 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
                   Lofi 2
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => form.setFieldValue("hz", "hz-60")}>
+              <TouchableOpacity
+                onPress={() => {
+                  form.setFieldValue("hz", "hz-60");
+                  form.setFieldValue("hzLabel", "60hz");
+                }}
+              >
                 <Text
                   style={[
                     baseStyles.alphaWhiteText,
@@ -283,7 +297,12 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
                   Lofi 3
                 </Text>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => form.setFieldValue("hz", "hz-80")}>
+              <TouchableOpacity
+                onPress={() => {
+                  form.setFieldValue("hz", "hz-80");
+                  form.setFieldValue("hzLabel", "80hz");
+                }}
+              >
                 <Text
                   style={[
                     baseStyles.alphaWhiteText,

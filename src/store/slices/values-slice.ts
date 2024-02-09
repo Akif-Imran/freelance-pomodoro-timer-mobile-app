@@ -1,13 +1,14 @@
-import { sounds } from "@constants";
+import { HzSoundsType, LofiSoundsType, RainSoundsType } from "@constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface State {
   work: number; //minutes
   shortBreak: number; //minutes
   longBreak: number; //minutes
-  lofi: string;
-  hz: string;
-  rain: string;
+  lofi: LofiSoundsType;
+  hz: HzSoundsType;
+  hzLabel: string;
+  rain: RainSoundsType;
   customAudio:
     | {
         name: string;
@@ -20,9 +21,10 @@ const initialState: State = {
   work: 0.5,
   shortBreak: 0.15,
   longBreak: 0.25,
-  lofi: sounds.lofi["lofi-1"],
-  hz: sounds.hz["hz-60"],
-  rain: sounds.rain["rain-1"],
+  lofi: "lofi-1",
+  hz: "hz-60",
+  hzLabel: "60hz",
+  rain: "rain-1",
   customAudio: undefined,
 };
 
@@ -36,6 +38,7 @@ const valuesSlice = createSlice({
       state.longBreak = initialState.longBreak;
       state.lofi = initialState.lofi;
       state.hz = initialState.hz;
+      state.hzLabel = initialState.hzLabel;
       state.rain = initialState.rain;
       state.customAudio = initialState.customAudio;
     },
@@ -45,6 +48,7 @@ const valuesSlice = createSlice({
       state.longBreak = action.payload.longBreak;
       state.lofi = action.payload.lofi;
       state.hz = action.payload.hz;
+      state.hzLabel = action.payload.hzLabel;
       state.rain = action.payload.rain;
       state.customAudio = action.payload?.customAudio || undefined;
     },
@@ -60,9 +64,10 @@ interface ValuePayload {
   pomodoro: number;
   shortBreak: number;
   longBreak: number;
-  lofi: string;
-  hz: string;
-  rain: string;
+  lofi: LofiSoundsType;
+  hz: HzSoundsType;
+  hzLabel: string;
+  rain: RainSoundsType;
   customAudio?:
     | {
         name: string;

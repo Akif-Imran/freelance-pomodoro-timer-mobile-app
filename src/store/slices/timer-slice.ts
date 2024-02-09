@@ -1,3 +1,4 @@
+import { SoundType } from "@constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface State {
@@ -8,6 +9,8 @@ interface State {
   isPlaying: boolean;
   stamp: number; //milliseconds since 1970 epoch
   timerRef: string | number | NodeJS.Timeout | undefined;
+  currentSound: "lofi" | "hz" | "rain";
+  justifyContent: "flex-start" | "center" | "flex-end";
 }
 
 const initialState: State = {
@@ -18,6 +21,8 @@ const initialState: State = {
   isPlaying: false,
   stamp: 0,
   timerRef: undefined,
+  currentSound: "lofi",
+  justifyContent: "flex-start",
 };
 
 const timerSlice = createSlice({
@@ -61,10 +66,17 @@ const timerSlice = createSlice({
     setTimerRef: (state, action: PayloadAction<string | number | NodeJS.Timeout | undefined>) => {
       state.timerRef = action.payload;
     },
+    setCurrentSound: (state, action: PayloadAction<keyof SoundType>) => {
+      state.currentSound = action.payload;
+      if (action.payload === "lofi") state.justifyContent = "flex-start";
+      else if (action.payload === "hz") state.justifyContent = "center";
+      else state.justifyContent = "flex-end";
+    },
   },
   extraReducers: (_builder) => {},
 });
 
 export { timerSlice };
-export const { play, stop, setTimerRef, pause, reset, finish } = timerSlice.actions;
+export const { play, stop, setTimerRef, pause, reset, finish, setCurrentSound } =
+  timerSlice.actions;
 export const timerReducer = timerSlice.reducer;

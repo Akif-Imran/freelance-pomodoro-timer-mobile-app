@@ -13,6 +13,9 @@ export default {
     },
     assetBundlePatterns: ["**/*"],
     ios: {
+      infoPlist: {
+        UIBackgroundModes: ["audio"],
+      },
       googleServicesFile: process.env.GOOGLE_SERVICES_IOS,
       bundleIdentifier: "com.hershjoshi.pomo",
       useFrameworks: "static",
@@ -32,6 +35,14 @@ export default {
       favicon: "./assets/favicon.png",
     },
     plugins: [
+      [
+        "expo-notifications",
+        {
+          icon: "./assets/favicon.png",
+          color: "#ffffff",
+          sounds: ["./src/assets/sounds/time-up.wav"],
+        },
+      ],
       [
         "expo-build-properties",
         {

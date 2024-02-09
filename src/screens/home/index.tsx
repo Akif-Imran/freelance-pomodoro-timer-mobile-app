@@ -1,30 +1,119 @@
-import { Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, theme } from "@theme";
 import { icons } from "@assets";
 import { _CircularProgressBar } from "@components";
 import { FontAwesome5 } from "@expo/vector-icons";
-import { selectTimer, useAppDispatch, useAppSelector } from "@store";
-import { play, pause, reset } from "@slices";
+import { selectTimer, selectValues, useAppDispatch, useAppSelector } from "@store";
+import { play, pause, reset, setCurrentSound } from "@slices";
 import { AuthStackScreenProps } from "@navigation-types";
 import { gStyles } from "@styles";
+import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
+import storage from "@react-native-firebase/storage";
+import { ToastService } from "@utility";
+import { SoundType, sounds } from "@constants";
 
 export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const { isPlaying } = useAppSelector(selectTimer);
+  const { isPlaying, currentSound, justifyContent } = useAppSelector(selectTimer);
+  const { lofi, hz, rain, hzLabel } = useAppSelector(selectValues);
+  const [sound, setSound] = React.useState<Audio.Sound | null>(null);
+  const [soundLoaded, setSoundLoaded] = React.useState(false);
 
   const start = () => {
     if (isPlaying) {
       dispatch(pause());
+      pauseSound();
     } else {
       dispatch(play());
+      playSound();
     }
   };
 
   const handleReset = () => {
     dispatch(reset());
+    resetSound();
   };
+
+  const handleInvalidSoundChange = () => {
+    ToastService.show("Change sound before starting timer.");
+  };
+
+  const handleChangeCurrentSound = (type: keyof SoundType) => {
+    dispatch(setCurrentSound(type));
+  };
+
+  async function playSound() {
+    try {
+      console.log(sound ? "has sound" : "no sound");
+      await sound?.playAsync();
+    } catch (e) {
+      console.warn(e);
+      ToastService.show("Error playing sound");
+    }
+  }
+
+  async function pauseSound() {
+    try {
+      await sound?.pauseAsync();
+    } catch (e) {
+      console.warn(e);
+      ToastService.show("Error playing sound");
+    }
+  }
+
+  async function resetSound() {
+    try {
+      await sound?.stopAsync();
+    } catch (e) {
+      console.warn(e);
+      ToastService.show("Error stopping sound");
+    }
+  }
+
+  React.useEffect(() => {
+    setSoundLoaded((_prev) => false);
+    async function loadSound() {
+      await Audio.setAudioModeAsync({
+        allowsRecordingIOS: false,
+        staysActiveInBackground: true,
+        interruptionModeIOS: InterruptionModeIOS.DuckOthers,
+        interruptionModeAndroid: InterruptionModeAndroid.DuckOthers,
+        playsInSilentModeIOS: true,
+        shouldDuckAndroid: true,
+        playThroughEarpieceAndroid: false,
+      });
+      let ref: string = sounds.lofi[lofi];
+      if (currentSound === "lofi") ref = sounds.lofi[lofi];
+      else if (currentSound === "hz") ref = sounds.hz[hz];
+      else if (currentSound === "rain") ref = sounds.rain[rain];
+      console.log(ref, "ref");
+      const url = await storage().ref().child(ref).getDownloadURL();
+      console.log(url, "url");
+      if (typeof url !== "string") return;
+      try {
+        const { sound, status } = await Audio.Sound.createAsync({ uri: url }, { isLooping: true });
+        console.log(status, "status");
+        setSound(sound);
+      } catch (e) {
+        console.warn(e);
+        ToastService.show("Error loading sound");
+      }
+    }
+    loadSound().then(() => {
+      setSoundLoaded((_prev) => true);
+    });
+  }, [currentSound, hz, lofi, rain]);
+
+  React.useEffect(() => {
+    return sound
+      ? () => {
+          console.log("Unloading Sound");
+          sound.unloadAsync();
+        }
+      : undefined;
+  }, [sound]);
 
   return (
     <SafeAreaView style={styles.main} mode="padding">
@@ -44,27 +133,69 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
 
       <View style={styles.widgetContainer}>
         <View style={styles.timerContainer}>
-          <_CircularProgressBar />
+          <_CircularProgressBar resetSound={resetSound} />
         </View>
 
         <View style={styles.infoBarContainer}>
           <View style={styles.soundTextContainer}>
-            <Text style={styles.soundTextInactive}>Lofi</Text>
-            <Text style={styles.soundTextActive}>40hz</Text>
-            <Text style={styles.soundTextInactive}>Rain</Text>
+            <TouchableOpacity
+              onPress={
+                isPlaying ? handleInvalidSoundChange : () => handleChangeCurrentSound("lofi")
+              }
+            >
+              <Text
+                style={currentSound === "lofi" ? styles.soundTextActive : styles.soundTextInactive}
+              >
+                Lofi
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={isPlaying ? handleInvalidSoundChange : () => handleChangeCurrentSound("hz")}
+            >
+              <Text
+                style={currentSound === "hz" ? styles.soundTextActive : styles.soundTextInactive}
+              >
+                {hzLabel}
+              </Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={
+                isPlaying ? handleInvalidSoundChange : () => handleChangeCurrentSound("rain")
+              }
+            >
+              <Text
+                style={currentSound === "rain" ? styles.soundTextActive : styles.soundTextInactive}
+              >
+                Rain
+              </Text>
+            </TouchableOpacity>
           </View>
-          <View style={styles.soundActiveIndicatorContainer}>
+          <View
+            style={StyleSheet.compose(styles.soundActiveIndicatorContainer, {
+              justifyContent,
+            })}
+          >
             <View style={styles.activeIndicator} />
           </View>
         </View>
       </View>
 
       <View style={gStyles.fabContainer}>
-        <TouchableOpacity style={gStyles.fab} onPress={start}>
-          {isPlaying ? (
-            <FontAwesome5 name="pause" size={28} color={colors.white} />
+        <TouchableOpacity
+          style={gStyles.fab}
+          onPress={soundLoaded ? start : undefined}
+          disabled={!soundLoaded}
+        >
+          {soundLoaded ? (
+            <>
+              {isPlaying ? (
+                <FontAwesome5 name="pause" size={28} color={colors.white} />
+              ) : (
+                <Image source={icons.play} style={gStyles.img} resizeMode="contain" />
+              )}
+            </>
           ) : (
-            <Image source={icons.play} style={gStyles.img} resizeMode="contain" />
+            <ActivityIndicator size={"small"} color={colors.white} />
           )}
         </TouchableOpacity>
       </View>

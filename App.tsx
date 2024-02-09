@@ -15,6 +15,22 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { App } from "@";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import * as SystemUI from "expo-system-ui";
+import * as Notifications from "expo-notifications";
+
+Notifications.setNotificationHandler({
+  handleError(notificationId, error) {
+    console.log("notification error", notificationId, error?.message);
+  },
+  handleSuccess(notificationId) {
+    console.log("notification successful", notificationId);
+  },
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: true,
+    priority: Notifications.AndroidNotificationPriority.HIGH,
+  }),
+});
 
 SystemUI.setBackgroundColorAsync(colors.white);
 
@@ -27,6 +43,25 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootApp() {
   const [isAppReady, setIsAppReady] = React.useState(false);
+  // const notificationListener = React.useRef<Notifications.Subscription>();
+  // const responseListener = React.useRef<Notifications.Subscription>();
+
+  // React.useEffect(() => {
+  //   // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+
+  //   notificationListener.current = Notifications.addNotificationReceivedListener(
+  //     (_notification) => {}
+  //   );
+
+  //   responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+  //     console.log(response);
+  //   });
+
+  //   return () => {
+  //     Notifications.removeNotificationSubscription(notificationListener?.current);
+  //     Notifications.removeNotificationSubscription(responseListener?.current);
+  //   };
+  // }, []);
 
   React.useLayoutEffect(() => {
     const prepare = async () => {
