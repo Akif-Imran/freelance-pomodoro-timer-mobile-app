@@ -39,6 +39,12 @@ export default {
     },
     plugins: [
       [
+        "expo-document-picker",
+        {
+          iCloudContainerEnvironment: "Development",
+        },
+      ],
+      [
         "expo-notifications",
         {
           icon: "./assets/favicon.png",

@@ -1,7 +1,8 @@
-import { Dimensions, StyleSheet, Text } from "react-native";
+import { Dimensions, Platform, StyleSheet, Text } from "react-native";
 import Animated, {
   Easing,
   cancelAnimation,
+  runOnJS,
   useAnimatedProps,
   useSharedValue,
   withTiming,
@@ -50,8 +51,13 @@ export const _CircularProgressBar: React.FC<OwnProps> = ({ resetSound }) => {
         title: isBreak ? "Rest is over." : "Time to rest.",
         body: isBreak ? "Time to get back to work." : "Take a rest to freshen up.",
         data: { data: "goes here" },
+        sound: Platform.OS === "ios" ? "timer.wav" : true,
+        priority: Notifications.AndroidNotificationPriority.MAX,
       },
-      trigger: null,
+      trigger: {
+        seconds: 1,
+        channelId: "alarm",
+      },
     });
   }, [dispatch, resetSound, isBreak]);
 
@@ -68,10 +74,19 @@ export const _CircularProgressBar: React.FC<OwnProps> = ({ resetSound }) => {
       }
       return;
     }
-    progress.value = withTiming(1, {
-      duration: value * 60 * 1000,
-      easing: Easing.linear,
-    });
+    progress.value = withTiming(
+      1,
+      {
+        duration: value * 60 * 1000,
+        easing: Easing.linear,
+      },
+      runOnJS((finished) => {
+        if (finished) {
+          onFinish();
+          progress.value = withTiming(1, { duration: 0 });
+        }
+      })
+    );
     const ref = setInterval(() => {
       setTimer((prev) => {
         console.log(prev);

@@ -49,6 +49,13 @@ export default function RootApp() {
 
   React.useEffect(() => {
     // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+    Notifications.setNotificationChannelAsync("alarm", {
+      name: "Timer Notifications",
+      enableVibrate: true,
+      vibrationPattern: [0, 250, 250, 250],
+      importance: Notifications.AndroidImportance.MAX,
+      sound: "timer.wav",
+    });
 
     notificationListener.current = Notifications.addNotificationReceivedListener(
       (_notification) => {}

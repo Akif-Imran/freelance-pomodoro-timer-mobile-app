@@ -10,16 +10,17 @@ import { revoke, setValues } from "@slices";
 import { ToastService } from "@utility";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { sounds } from "@constants";
+import { HzSoundsType, LofiSoundsType, RainSoundsType, sounds } from "@constants";
+import * as DocumentPicker from "expo-document-picker";
 
 interface IForm {
   pomodoro: number;
   shortBreak: number;
   longBreak: number;
-  lofi: string;
-  hz: string;
+  lofi: LofiSoundsType;
+  hz: HzSoundsType;
   hzLabel: string;
-  rain: string;
+  rain: RainSoundsType;
   hasCustomAudio: boolean;
   customAudio?: {
     name: string;
@@ -99,6 +100,33 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
       });
     },
   });
+
+  const handlePickCustomAudio = () => {
+    DocumentPicker.getDocumentAsync({
+      type: "audio/mpeg",
+      copyToCacheDirectory: true,
+      multiple: false,
+    }).then((result) => {
+      const { canceled, assets } = result;
+      if (!canceled) {
+        const value = assets.at(0);
+        if (!value) {
+          ToastService.show("No file selected");
+          return;
+        }
+        form.setValues((prev) => ({
+          ...prev,
+          customAudio: {
+            name: value.name,
+            url: value.uri,
+          },
+          hasCustomAudio: true,
+        }));
+      } else {
+        ToastService.show("Custom audio not added");
+      }
+    });
+  };
 
   const handleLogout = () => {
     dispatch(revoke());
@@ -331,7 +359,7 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
 
           <View style={styles.audioSelectionContainer}>
             <View style={styles.audioCol}>
-              <TouchableOpacity>
+              <TouchableOpacity onPress={handlePickCustomAudio}>
                 <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
                   Add custom audio
                 </Text>
