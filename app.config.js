@@ -16,7 +16,7 @@ export default {
       infoPlist: {
         UIBackgroundModes: ["audio", "processing"],
         NSLocalNotificationUsageDescription: "Allow notifications to receiver timer up alerts.",
-        UILocalNotificationDefaultSoundName: "time-up",
+        UILocalNotificationDefaultSoundName: "timeUp",
       },
       googleServicesFile: process.env.GOOGLE_SERVICES_IOS,
       bundleIdentifier: "com.hershjoshi.pomo",
