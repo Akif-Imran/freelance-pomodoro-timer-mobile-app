@@ -29,6 +29,7 @@ Notifications.setNotificationHandler({
     shouldPlaySound: true,
     shouldSetBadge: true,
     priority: Notifications.AndroidNotificationPriority.HIGH,
+    sound: "timer.wav",
   }),
 });
 
