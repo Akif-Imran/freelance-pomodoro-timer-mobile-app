@@ -58,7 +58,9 @@ export default function RootApp() {
     });
 
     return () => {
+      //@ts-expect-error
       Notifications.removeNotificationSubscription(notificationListener?.current);
+      //@ts-expect-error
       Notifications.removeNotificationSubscription(responseListener?.current);
     };
   }, []);
