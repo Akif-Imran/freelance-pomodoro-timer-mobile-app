@@ -43,25 +43,25 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootApp() {
   const [isAppReady, setIsAppReady] = React.useState(false);
-  // const notificationListener = React.useRef<Notifications.Subscription>();
-  // const responseListener = React.useRef<Notifications.Subscription>();
+  const notificationListener = React.useRef<Notifications.Subscription>();
+  const responseListener = React.useRef<Notifications.Subscription>();
 
-  // React.useEffect(() => {
-  //   // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
+  React.useEffect(() => {
+    // registerForPushNotificationsAsync().then(token => setExpoPushToken(token));
 
-  //   notificationListener.current = Notifications.addNotificationReceivedListener(
-  //     (_notification) => {}
-  //   );
+    notificationListener.current = Notifications.addNotificationReceivedListener(
+      (_notification) => {}
+    );
 
-  //   responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-  //     console.log(response);
-  //   });
+    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
+      console.log(response);
+    });
 
-  //   return () => {
-  //     Notifications.removeNotificationSubscription(notificationListener?.current);
-  //     Notifications.removeNotificationSubscription(responseListener?.current);
-  //   };
-  // }, []);
+    return () => {
+      Notifications.removeNotificationSubscription(notificationListener?.current);
+      Notifications.removeNotificationSubscription(responseListener?.current);
+    };
+  }, []);
 
   React.useLayoutEffect(() => {
     const prepare = async () => {

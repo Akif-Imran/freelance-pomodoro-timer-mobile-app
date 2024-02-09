@@ -32,6 +32,7 @@ export default {
         foregroundImage: "./assets/adaptive-icon.png",
         backgroundColor: "#ffffff",
       },
+      permissions: ["SCHEDULE_EXACT_ALARM"],
     },
     web: {
       favicon: "./assets/favicon.png",
