@@ -43,7 +43,7 @@ export default {
         {
           icon: "./assets/favicon.png",
           color: "#ffffff",
-          sounds: ["./src/assets/sounds/time-up.wav"],
+          sounds: ["./src/assets/sounds/timeUp.wav"],
         },
       ],
       [
