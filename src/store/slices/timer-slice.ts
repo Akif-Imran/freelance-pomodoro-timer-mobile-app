@@ -32,6 +32,7 @@ const timerSlice = createSlice({
     play: (state) => {
       state.isPlaying = true;
       state.stamp = Date.now();
+      state.isPaused = false;
     },
     stop: (state) => {
       state.isPlaying = false;

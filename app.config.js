@@ -18,14 +18,14 @@ export default {
         NSLocalNotificationUsageDescription: "Allow notifications to receiver timer up alerts.",
         UILocalNotificationDefaultSoundName: "timeUp",
       },
-      googleServicesFile: process.env.GOOGLE_SERVICES_IOS,
+      googleServicesFile: "./GoogleService-Info.plist",
       bundleIdentifier: "com.hershjoshi.pomo",
       useFrameworks: "static",
       buildNumber: "1",
       supportsTablet: true,
     },
     android: {
-      googleServicesFile: process.env.GOOGLE_SERVICES_ANDROID,
+      googleServicesFile: "./google-services.json",
       package: "com.hershjoshi.pomo",
       versionCode: 1,
       adaptiveIcon: {
