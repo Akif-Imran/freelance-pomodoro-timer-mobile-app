@@ -20,9 +20,9 @@ interface State {
 }
 
 const initialState: State = {
-  work: 0.5,
-  shortBreak: 0.15,
-  longBreak: 0.25,
+  work: 25,
+  shortBreak: 5,
+  longBreak: 15,
   lofi: "lofi-1",
   hz: "hz-60",
   hzLabel: "60hz",
