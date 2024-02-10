@@ -29,9 +29,9 @@ yarn-error.*
 # macOS
 .DS_Store
 *.pem
-# firebase files
-GoogleService-Info.plist
-google-services.json
+# # firebase files
+# GoogleService-Info.plist
+# google-services.json
 
 
 # local env files
