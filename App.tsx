@@ -38,6 +38,7 @@ SystemUI.setBackgroundColorAsync(colors.white);
 GoogleSignin.configure({
   // iosClientId: "175623181296-eflgs5u4g6np51ouvdfqirn7hgp7c3id.apps.googleusercontent.com",
   webClientId: "175623181296-84d3ujrcoqai0o02te7o2g2n4b8nk4tg.apps.googleusercontent.com",
+  offlineAccess: false,
 });
 
 SplashScreen.preventAutoHideAsync();
