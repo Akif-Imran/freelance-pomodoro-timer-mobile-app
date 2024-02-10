@@ -1,4 +1,4 @@
-import { HzSoundsType, LofiSoundsType, RainSoundsType } from "@constants";
+import { HzSoundsType, LofiSoundsType, RainSoundsType, SoundType } from "@constants";
 import { PayloadAction, createSlice } from "@reduxjs/toolkit";
 
 interface State {
@@ -9,6 +9,8 @@ interface State {
   hz: HzSoundsType;
   hzLabel: string;
   rain: RainSoundsType;
+  currentSound: "lofi" | "hz" | "rain";
+  justifyContent: "flex-start" | "center" | "flex-end";
   customAudio:
     | {
         name: string;
@@ -25,6 +27,8 @@ const initialState: State = {
   hz: "hz-60",
   hzLabel: "60hz",
   rain: "rain-1",
+  currentSound: "lofi",
+  justifyContent: "flex-start",
   customAudio: undefined,
 };
 
@@ -52,12 +56,18 @@ const valuesSlice = createSlice({
       state.rain = action.payload.rain;
       state.customAudio = action.payload?.customAudio || undefined;
     },
+    setCurrentSound: (state, action: PayloadAction<keyof SoundType>) => {
+      state.currentSound = action.payload;
+      if (action.payload === "lofi") state.justifyContent = "flex-start";
+      else if (action.payload === "hz") state.justifyContent = "center";
+      else state.justifyContent = "flex-end";
+    },
   },
   extraReducers: (_builder) => {},
 });
 
 export { valuesSlice };
-export const { resetValues, setValues } = valuesSlice.actions;
+export const { resetValues, setValues, setCurrentSound } = valuesSlice.actions;
 export const valuesReducer = valuesSlice.reducer;
 
 interface ValuePayload {

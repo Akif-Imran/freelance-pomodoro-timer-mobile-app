@@ -1,23 +1,24 @@
-import { ActivityIndicator, Image, StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, StyleSheet, Text, TouchableOpacity, View } from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, theme } from "@theme";
-import { icons } from "@assets";
 import { _CircularProgressBar } from "@components";
-import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5, MaterialIcons } from "@expo/vector-icons";
 import { selectTimer, selectValues, useAppDispatch, useAppSelector } from "@store";
-import { play, pause, reset, setCurrentSound } from "@slices";
+import { play, pause, reset, setCurrentSound, sessionReset } from "@slices";
 import { AuthStackScreenProps } from "@navigation-types";
 import { gStyles } from "@styles";
 import { Audio, InterruptionModeAndroid, InterruptionModeIOS } from "expo-av";
 import storage from "@react-native-firebase/storage";
 import { ToastService } from "@utility";
 import { SoundType, sounds } from "@constants";
+import BackgroundTimer from "react-native-background-timer";
 
 export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => {
   const dispatch = useAppDispatch();
-  const { isPlaying, currentSound, justifyContent } = useAppSelector(selectTimer);
-  const { lofi, hz, rain, hzLabel } = useAppSelector(selectValues);
+  const { isPlaying } = useAppSelector(selectTimer);
+  const { lofi, hz, rain, hzLabel, customAudio, currentSound, justifyContent } =
+    useAppSelector(selectValues);
   const [sound, setSound] = React.useState<Audio.Sound | null>(null);
   const [soundLoaded, setSoundLoaded] = React.useState(false);
 
@@ -34,6 +35,14 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
   const handleReset = () => {
     dispatch(reset());
     resetSound();
+    BackgroundTimer.stopBackgroundTimer();
+    ToastService.show("Long press to reset session");
+  };
+
+  const handleSessionReset = () => {
+    dispatch(sessionReset());
+    resetSound();
+    BackgroundTimer.stopBackgroundTimer();
   };
 
   const handleInvalidSoundChange = () => {
@@ -84,12 +93,18 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
         shouldDuckAndroid: true,
         playThroughEarpieceAndroid: false,
       });
-      let ref: string = sounds.lofi[lofi];
-      if (currentSound === "lofi") ref = sounds.lofi[lofi];
-      else if (currentSound === "hz") ref = sounds.hz[hz];
-      else if (currentSound === "rain") ref = sounds.rain[rain];
-      console.log(ref, "ref");
-      const url = await storage().ref().child(ref).getDownloadURL();
+      let url: string;
+      if (customAudio?.url && currentSound === "rain") {
+        url = customAudio?.url;
+        console.log(url, "url");
+      } else {
+        let ref: string = sounds.lofi[lofi];
+        if (currentSound === "lofi") ref = sounds.lofi[lofi];
+        else if (currentSound === "hz") ref = sounds.hz[hz];
+        else if (currentSound === "rain") ref = sounds.rain[rain];
+        console.log(ref, "ref");
+        url = await storage().ref().child(ref).getDownloadURL();
+      }
       console.log(url, "url");
       if (typeof url !== "string") return;
       try {
@@ -104,7 +119,7 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
     loadSound().then(() => {
       setSoundLoaded((_prev) => true);
     });
-  }, [currentSound, hz, lofi, rain]);
+  }, [currentSound, hz, lofi, rain, customAudio?.url]);
 
   React.useEffect(() => {
     return sound
@@ -124,10 +139,16 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
             navigation.navigate("Settings");
           }}
         >
-          <Image source={icons.settings} style={gStyles.img} />
+          {/* <Image source={icons.settings} style={gStyles.img} /> */}
+          <MaterialIcons name="settings" size={32} color={colors.primary} />
         </TouchableOpacity>
-        <TouchableOpacity style={[gStyles.btn, gStyles.bg_gray]} onPress={handleReset}>
-          <Image source={icons.refresh} style={gStyles.img} />
+        <TouchableOpacity
+          style={[gStyles.btn, gStyles.bg_gray]}
+          onPress={handleReset}
+          onLongPress={handleSessionReset}
+        >
+          {/* <Image source={icons.refresh} style={gStyles.img} /> */}
+          <MaterialIcons name="refresh" size={32} color={colors.primary} />
         </TouchableOpacity>
       </View>
 
@@ -166,7 +187,7 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
               <Text
                 style={currentSound === "rain" ? styles.soundTextActive : styles.soundTextInactive}
               >
-                Rain
+                {customAudio?.url ? "Custom" : "Rain"}
               </Text>
             </TouchableOpacity>
           </View>
@@ -189,9 +210,10 @@ export const Home: React.FC<AuthStackScreenProps<"Home">> = ({ navigation }) => 
           {soundLoaded ? (
             <>
               {isPlaying ? (
-                <FontAwesome5 name="pause" size={28} color={colors.white} />
+                <FontAwesome5 name="pause" size={32} color={colors.white} />
               ) : (
-                <Image source={icons.play} style={gStyles.img} resizeMode="contain" />
+                // <Image source={icons.play} style={gStyles.img} resizeMode="contain" />
+                <FontAwesome5 name="play" size={32} color={colors.white} />
               )}
             </>
           ) : (

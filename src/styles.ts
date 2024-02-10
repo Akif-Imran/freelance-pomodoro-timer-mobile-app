@@ -125,9 +125,9 @@ export const gStyles = StyleSheet.create({
     // borderWidth: 1,
   },
   fab: {
-    position: "absolute",
-    bottom: theme.spacing.xl,
-    right: theme.spacing.md,
+    // position: "absolute",
+    // bottom: theme.spacing.xl,
+    // right: theme.spacing.lg,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",

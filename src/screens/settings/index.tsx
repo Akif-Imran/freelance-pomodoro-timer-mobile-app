@@ -1,8 +1,18 @@
-import { Image, StyleSheet, Text, TextInput, TouchableOpacity, View } from "react-native";
+import {
+  Image,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  TouchableWithoutFeedback,
+  Keyboard,
+  ScrollView,
+} from "react-native";
 import React from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { colors, theme } from "@theme";
-import { icons, images } from "@assets";
+import { images } from "@assets";
 import { baseStyles, gStyles, textStyles } from "@styles";
 import { AuthStackScreenProps } from "@navigation-types";
 import { selectAuth, selectValues, useAppDispatch, useAppSelector } from "@store";
@@ -12,6 +22,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { HzSoundsType, LofiSoundsType, RainSoundsType, sounds } from "@constants";
 import * as DocumentPicker from "expo-document-picker";
+import { FontAwesome6 } from "@expo/vector-icons";
 
 interface IForm {
   pomodoro: number;
@@ -132,248 +143,263 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
     dispatch(revoke());
   };
 
-  const handleReset = () => {
+  /*   const handleReset = () => {
     ToastService.show("Under development");
-  };
+  }; */
 
   console.log(form.errors);
   console.log(form.values);
   return (
     <SafeAreaView style={styles.main} mode="padding">
-      <View style={gStyles.topBtnContainer}>
-        <TouchableOpacity style={styles.profileBadge} onPress={handleLogout} activeOpacity={0.7}>
-          <Image
-            source={user.photoURL ? { uri: user.photoURL } : images.profile}
-            style={styles.profileImg}
-          />
-          <View>
-            <Text style={gStyles.tblHeaderText}>{user.displayName}</Text>
-            <Text style={gStyles.tblDescText}>{user.email}</Text>
-          </View>
-        </TouchableOpacity>
-
-        <TouchableOpacity style={[gStyles.btn, gStyles.bg_gray]} onPress={handleReset}>
-          <Image source={icons.refresh} style={gStyles.img} />
-        </TouchableOpacity>
-      </View>
-
-      <View style={styles.settingModal}>
-        <View style={styles.contentContainer}>
-          <Text style={styles.settingsTitle}>Settings</Text>
-        </View>
-        <View style={styles.divider} />
-        <View style={styles.contentContainer}>
-          <Text style={[styles.mdTitle, baseStyles.whiteText]}>Time (minutes)</Text>
-          <View style={styles.inputContainer}>
-            <View style={styles.labelAlignment}>
-              <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>pomodoro</Text>
-              <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
-                short break
-              </Text>
-              <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>long break</Text>
-            </View>
-            <View style={styles.inputAlignment}>
-              <View>
-                <TextInput
-                  value={form.values.pomodoro.toString()}
-                  style={styles.input}
-                  id="pomodoro"
-                  onChangeText={form.handleChange("pomodoro")}
-                  onBlur={form.handleBlur("pomodoro")}
-                  textContentType="none"
-                  keyboardType="numeric"
-                />
-                {form.errors.pomodoro && form.touched.pomodoro ? (
-                  <Text style={textStyles.smErrorText}>{form.errors.pomodoro}</Text>
-                ) : null}
-              </View>
-              <View>
-                <TextInput
-                  value={form.values.shortBreak.toString()}
-                  style={styles.input}
-                  id="shortBreak"
-                  onChangeText={form.handleChange("shortBreak")}
-                  onBlur={form.handleBlur("shortBreak")}
-                  textContentType="none"
-                  keyboardType="numeric"
-                />
-                {form.errors.shortBreak && form.touched.shortBreak ? (
-                  <Text style={textStyles.smErrorText}>{form.errors.shortBreak}</Text>
-                ) : null}
-              </View>
-              <View>
-                <TextInput
-                  value={form.values.longBreak.toString()}
-                  style={styles.input}
-                  id="longBreak"
-                  onChangeText={form.handleChange("longBreak")}
-                  onBlur={form.handleBlur("longBreak")}
-                  textContentType="none"
-                  keyboardType="numeric"
-                />
-                {form.errors.longBreak && form.touched.longBreak ? (
-                  <Text style={textStyles.smErrorText}>{form.errors.longBreak}</Text>
-                ) : null}
-              </View>
-            </View>
-          </View>
-        </View>
-
-        <View style={styles.divider} />
-        <Text style={[styles.mdTitle, baseStyles.whiteText]}>Audio Selected</Text>
-        <View style={styles.contentContainer}>
-          {/* lofi beats */}
-          <View style={styles.audioSelectionContainer}>
-            <View style={styles.audioCol}>
-              <TouchableOpacity onPress={() => form.setFieldValue("lofi", "lofi-1")}>
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.lofi === "lofi-1"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  Lofi 1
-                </Text>
-              </TouchableOpacity>
+      <ScrollView>
+        <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+          <React.Fragment>
+            <View style={gStyles.topBtnContainer}>
               <TouchableOpacity
-                onPress={() => {
-                  form.setFieldValue("hz", "hz-40");
-                  form.setFieldValue("hzLabel", "40hz");
-                }}
+                style={styles.profileBadge}
+                onPress={handleLogout}
+                activeOpacity={0.7}
               >
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.hz === "hz-40"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  40 Hz
-                </Text>
+                <Image
+                  source={user.photoURL ? { uri: user.photoURL } : images.profile}
+                  style={styles.profileImg}
+                />
+                <View>
+                  <Text style={gStyles.tblHeaderText}>{user.displayName}</Text>
+                  <Text style={gStyles.tblDescText}>{user.email}</Text>
+                </View>
               </TouchableOpacity>
-              <TouchableOpacity onPress={() => form.setFieldValue("rain", "rain-1")}>
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.rain === "rain-1"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  Rain 1
-                </Text>
-              </TouchableOpacity>
+
+              {/* <TouchableOpacity style={[gStyles.btn, gStyles.bg_gray]} onPress={handleReset}>
+                <Image source={icons.refresh} style={gStyles.img} />
+              </TouchableOpacity> */}
             </View>
 
-            <View style={styles.audioCol}>
-              <TouchableOpacity onPress={() => form.setFieldValue("lofi", "lofi-2")}>
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.lofi === "lofi-2"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  Lofi 2
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  form.setFieldValue("hz", "hz-60");
-                  form.setFieldValue("hzLabel", "60hz");
-                }}
-              >
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.hz === "hz-60"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  60 Hz
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => form.setFieldValue("rain", "rain-2")}>
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.rain === "rain-2"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  Rain 2
-                </Text>
-              </TouchableOpacity>
+            <View style={styles.settingModal}>
+              <View style={styles.contentContainer}>
+                <Text style={styles.settingsTitle}>Settings</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.contentContainer}>
+                <Text style={[styles.mdTitle, baseStyles.whiteText]}>Time (minutes)</Text>
+                <View style={styles.inputContainer}>
+                  <View style={styles.labelAlignment}>
+                    <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
+                      pomodoro
+                    </Text>
+                    <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
+                      short break
+                    </Text>
+                    <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
+                      long break
+                    </Text>
+                  </View>
+                  <View style={styles.inputAlignment}>
+                    <View>
+                      <TextInput
+                        value={form.values.pomodoro.toString()}
+                        style={styles.input}
+                        id="pomodoro"
+                        onChangeText={form.handleChange("pomodoro")}
+                        onBlur={form.handleBlur("pomodoro")}
+                        textContentType="none"
+                        keyboardType="numeric"
+                      />
+                      {form.errors.pomodoro && form.touched.pomodoro ? (
+                        <Text style={textStyles.smErrorText}>{form.errors.pomodoro}</Text>
+                      ) : null}
+                    </View>
+                    <View>
+                      <TextInput
+                        value={form.values.shortBreak.toString()}
+                        style={styles.input}
+                        id="shortBreak"
+                        onChangeText={form.handleChange("shortBreak")}
+                        onBlur={form.handleBlur("shortBreak")}
+                        textContentType="none"
+                        keyboardType="numeric"
+                      />
+                      {form.errors.shortBreak && form.touched.shortBreak ? (
+                        <Text style={textStyles.smErrorText}>{form.errors.shortBreak}</Text>
+                      ) : null}
+                    </View>
+                    <View>
+                      <TextInput
+                        value={form.values.longBreak.toString()}
+                        style={styles.input}
+                        id="longBreak"
+                        onChangeText={form.handleChange("longBreak")}
+                        onBlur={form.handleBlur("longBreak")}
+                        textContentType="none"
+                        keyboardType="numeric"
+                      />
+                      {form.errors.longBreak && form.touched.longBreak ? (
+                        <Text style={textStyles.smErrorText}>{form.errors.longBreak}</Text>
+                      ) : null}
+                    </View>
+                  </View>
+                </View>
+              </View>
+
+              <View style={styles.divider} />
+              <Text style={[styles.mdTitle, baseStyles.whiteText]}>Audio Selected</Text>
+              <View style={styles.contentContainer}>
+                {/* lofi beats */}
+                <View style={styles.audioSelectionContainer}>
+                  <View style={styles.audioCol}>
+                    <TouchableOpacity onPress={() => form.setFieldValue("lofi", "lofi-1")}>
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.lofi === "lofi-1"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        Lofi 1
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        form.setFieldValue("hz", "hz-40");
+                        form.setFieldValue("hzLabel", "40hz");
+                      }}
+                    >
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.hz === "hz-40"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        40 Hz
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => form.setFieldValue("rain", "rain-1")}>
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.rain === "rain-1"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        Rain 1
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.audioCol}>
+                    <TouchableOpacity onPress={() => form.setFieldValue("lofi", "lofi-2")}>
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.lofi === "lofi-2"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        Lofi 2
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        form.setFieldValue("hz", "hz-60");
+                        form.setFieldValue("hzLabel", "60hz");
+                      }}
+                    >
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.hz === "hz-60"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        60 Hz
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => form.setFieldValue("rain", "rain-2")}>
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.rain === "rain-2"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        Rain 2
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+
+                  <View style={styles.audioCol}>
+                    <TouchableOpacity onPress={() => form.setFieldValue("lofi", "lofi-3")}>
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.lofi === "lofi-3"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        Lofi 3
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      onPress={() => {
+                        form.setFieldValue("hz", "hz-80");
+                        form.setFieldValue("hzLabel", "80hz");
+                      }}
+                    >
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.hz === "hz-80"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        80 Hz
+                      </Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={() => form.setFieldValue("rain", "rain-3")}>
+                      <Text
+                        style={[
+                          baseStyles.alphaWhiteText,
+                          form.values.rain === "rain-3"
+                            ? baseStyles.selectedText
+                            : baseStyles.unselectedText,
+                        ]}
+                      >
+                        Rain 3
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+
+                <View style={styles.audioSelectionContainer}>
+                  <View style={styles.audioCol}>
+                    <TouchableOpacity onPress={handlePickCustomAudio}>
+                      <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
+                        Add custom audio
+                      </Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </View>
             </View>
 
-            <View style={styles.audioCol}>
-              <TouchableOpacity onPress={() => form.setFieldValue("lofi", "lofi-3")}>
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.lofi === "lofi-3"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  Lofi 3
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                onPress={() => {
-                  form.setFieldValue("hz", "hz-80");
-                  form.setFieldValue("hzLabel", "80hz");
-                }}
-              >
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.hz === "hz-80"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  80 Hz
-                </Text>
-              </TouchableOpacity>
-              <TouchableOpacity onPress={() => form.setFieldValue("rain", "rain-3")}>
-                <Text
-                  style={[
-                    baseStyles.alphaWhiteText,
-                    form.values.rain === "rain-3"
-                      ? baseStyles.selectedText
-                      : baseStyles.unselectedText,
-                  ]}
-                >
-                  Rain 3
-                </Text>
+            <View style={gStyles.fabContainer}>
+              <TouchableOpacity style={gStyles.fab} onPress={() => form.handleSubmit()}>
+                {/* <Image source={icons.tick} style={gStyles.img} resizeMode="contain" /> */}
+                <FontAwesome6 name="check" size={32} color={colors.white} />
               </TouchableOpacity>
             </View>
-          </View>
-
-          <View style={styles.audioSelectionContainer}>
-            <View style={styles.audioCol}>
-              <TouchableOpacity onPress={handlePickCustomAudio}>
-                <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
-                  Add custom audio
-                </Text>
-              </TouchableOpacity>
-            </View>
-          </View>
-        </View>
-      </View>
-
-      <View style={gStyles.fabContainer}>
-        <TouchableOpacity style={gStyles.fab} onPress={() => form.handleSubmit()}>
-          <Image source={icons.tick} style={gStyles.img} resizeMode="contain" />
-        </TouchableOpacity>
-      </View>
+          </React.Fragment>
+        </TouchableWithoutFeedback>
+      </ScrollView>
     </SafeAreaView>
   );
 };
@@ -408,6 +434,7 @@ const styles = StyleSheet.create({
     backgroundColor: colors.primary,
     borderRadius: theme.radius.xl * 1.5,
     paddingVertical: theme.spacing.lg,
+    marginBottom: theme.spacing.lg,
     // borderWidth: 1,
   },
   contentContainer: {
