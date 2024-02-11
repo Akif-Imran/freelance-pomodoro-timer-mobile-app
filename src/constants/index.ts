@@ -11,18 +11,18 @@ export type SoundType = {
 export const sounds: SoundType = {
   lofi: {
     "lofi-1": "lofi-1.mp3",
-    "lofi-2": "lofi-1.mp3",
-    "lofi-3": "lofi-1.mp3",
+    "lofi-2": "lofi-2.mp3",
+    "lofi-3": "lofi-3.mp3",
   },
   hz: {
-    "hz-40": "hz-60.mp3",
+    "hz-40": "hz-40.mp3",
     "hz-60": "hz-60.mp3",
-    "hz-80": "hz-60.mp3",
+    "hz-80": "hz-80.mp3",
   },
   rain: {
     "rain-1": "rain-1.mp3",
-    "rain-2": "rain-1.mp3",
-    "rain-3": "rain-1.mp3",
+    "rain-2": "rain-2.mp3",
+    "rain-3": "rain-3.mp3",
   },
 };
 export const messages = {
