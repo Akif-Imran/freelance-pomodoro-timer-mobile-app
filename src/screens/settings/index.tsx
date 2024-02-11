@@ -22,7 +22,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 import { HzSoundsType, LofiSoundsType, RainSoundsType, sounds } from "@constants";
 import * as DocumentPicker from "expo-document-picker";
-import { FontAwesome6 } from "@expo/vector-icons";
+import { FontAwesome, FontAwesome6 } from "@expo/vector-icons";
 
 interface IForm {
   pomodoro: number;
@@ -137,6 +137,10 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
         ToastService.show("Custom audio not added");
       }
     });
+  };
+
+  const handleRemoveCustomAudio = () => {
+    form.setValues((prev) => ({ ...prev, customAudio: undefined, hasCustomAudio: false }));
   };
 
   const handleLogout = () => {
@@ -381,11 +385,19 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
 
                 <View style={styles.audioSelectionContainer}>
                   <View style={styles.audioCol}>
-                    <TouchableOpacity onPress={handlePickCustomAudio}>
-                      <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
-                        Add custom audio
-                      </Text>
-                    </TouchableOpacity>
+                    <View style={styles.customAudioRowContainer}>
+                      <TouchableOpacity onPress={handlePickCustomAudio}>
+                        <Text style={[baseStyles.unselectedText, baseStyles.alphaWhiteText]}>
+                          Add custom audio
+                        </Text>
+                      </TouchableOpacity>
+                      <TouchableOpacity
+                        onPress={handleRemoveCustomAudio}
+                        style={styles.removeCustomAudioBtn}
+                      >
+                        <FontAwesome name="remove" size={24} color={colors.white} />
+                      </TouchableOpacity>
+                    </View>
                   </View>
                 </View>
               </View>
@@ -497,5 +509,19 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "flex-start",
     marginVertical: theme.spacing.xs,
+    // borderWidth: 1,
+  },
+  customAudioRowContainer: {
+    width: "100%",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  removeCustomAudioBtn: {
+    paddingVertical: theme.spacing.xs,
+    paddingHorizontal: theme.spacing.sm,
+    borderRadius: theme.radius.sm,
+    backgroundColor: colors.onPrimaryBackground,
+    // borderWidth: 1,
   },
 });
