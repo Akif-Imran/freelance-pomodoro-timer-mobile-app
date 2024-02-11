@@ -155,7 +155,7 @@ export const Settings: React.FC<AuthStackScreenProps<"Settings">> = ({ navigatio
   console.log(form.values);
   return (
     <SafeAreaView style={styles.main} mode="padding">
-      <ScrollView>
+      <ScrollView contentContainerStyle={styles.scrollStyle} showsVerticalScrollIndicator={false}>
         <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
           <React.Fragment>
             <View style={gStyles.topBtnContainer}>
@@ -421,10 +421,12 @@ export default Settings;
 const styles = StyleSheet.create({
   main: {
     flex: 1,
-    paddingHorizontal: theme.spacing.xl,
     paddingVertical: theme.spacing.lg,
     backgroundColor: colors.white,
     // borderWidth: 1,
+  },
+  scrollStyle: {
+    paddingHorizontal: theme.spacing.xl,
   },
   profileBadge: {
     flexDirection: "row",
