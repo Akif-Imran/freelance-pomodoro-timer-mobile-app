@@ -37,7 +37,8 @@ SystemUI.setBackgroundColorAsync(colors.white);
 
 GoogleSignin.configure({
   // iosClientId: "175623181296-eflgs5u4g6np51ouvdfqirn7hgp7c3id.apps.googleusercontent.com",
-  webClientId: "175623181296-84d3ujrcoqai0o02te7o2g2n4b8nk4tg.apps.googleusercontent.com",
+  webClientId:
+    "175623181296-84d3ujrcoqai0o02te7o2g2n4b8nk4tg.apps.googleusercontent.com",
   offlineAccess: false,
 });
 
@@ -58,17 +59,19 @@ export default function RootApp() {
       sound: "timer.wav",
     });
 
-    notificationListener.current = Notifications.addNotificationReceivedListener(
-      (_notification) => {}
-    );
+    notificationListener.current =
+      Notifications.addNotificationReceivedListener((_notification) => {});
 
-    responseListener.current = Notifications.addNotificationResponseReceivedListener((response) => {
-      console.log(response);
-    });
+    responseListener.current =
+      Notifications.addNotificationResponseReceivedListener((response) => {
+        console.log(response);
+      });
 
     return () => {
       //@ts-expect-error
-      Notifications.removeNotificationSubscription(notificationListener?.current);
+      Notifications.removeNotificationSubscription(
+        notificationListener?.current,
+      );
       //@ts-expect-error
       Notifications.removeNotificationSubscription(responseListener?.current);
     };
